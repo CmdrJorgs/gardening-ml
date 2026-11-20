@@ -920,54 +920,54 @@ def build_full_paper(docx_path):
         r_venue.font.size = Pt(10)
 
     # =========================================================================
-    # SECTION 17: TEN AUDIENCE QUESTIONS (FOR MILESTONE 3)
+    # SECTION 17: TEN AUDIENCE QUESTIONS & DEFENSE (FOR MILESTONE 3)
     # =========================================================================
     doc.add_page_break()
     add_h1("Ten Anticipated Stakeholder Questions (For Milestone 3 Defense)")
     
     add_p("The following 10 incisive technical, agronomic, and operational questions are anticipated from stakeholders, "
-          "academic reviewers, and community garden operators. Detailed analytical defenses and empirical justifications "
-          "will be delivered during the Milestone 3 defense presentation:")
+          "academic reviewers, and community garden operators. Comprehensive analytical defenses, empirical justifications, "
+          "and engineering mitigations are detailed below:")
 
-    questions = [
-        ("Question 1 (Spatial Solver Scalability): ",
-         "How does the Integer Linear Programming formulation scale computationally if an urban farm operates twenty 240 cm x 120 cm raised beds with 40 distinct cultivars rather than a single bed? At what threshold does the branch-and-bound solver hit combinatorial explosion, and what heuristic decomposition or genetic algorithm would you fall back on?"),
-        ("Question 2 (Extreme Heat and Pollen Viability): ",
-         "The XGBoost phenology regressor achieved an exceptional MAE of 0.67 days using accumulated Growing Degree Days (GDD). How does the model account for acute heat-shock plateaus—such as Wasatch Front heatwaves exceeding 38°C (100°F)—where vegetative growth halts and tomato blossoms drop due to pollen sterility, decoupling developmental time from simple linear GDD accumulation?"),
-        ("Question 3 (In-Situ vs. Reanalysis Telemetry Calibration): ",
-         "You utilized ERA5-Land reanalysis data (9 km resolution) calibrated against regional GHCN-Daily stations. In dense urban environments, thermal mass from masonry walls and asphalt creates micro-heat islands that deviate up to 4°C from reanalysis grids. What empirical calibration step would be required before deploying this pipeline to an unmonitored inner-city rooftop?"),
-        ("Question 4 (Soil Hydraulic Heterogeneity in Organic Media): ",
-         "The FAO-56 dual crop coefficient model assumes a uniform Sandy Loam soil texture characterized by Saxton-Rawls pedotransfer equations. Raised beds frequently utilize engineered potting mixes with high organic matter (e.g., coconut coir, compost, perlite) exhibiting hydrophobic drying curves. How sensitive is your depletion threshold (RAW = 28 mm) to organic media hysteretic wetting?"),
-        ("Question 5 (Biological Validity of Companion Synergy Scores): ",
-         "Your companion synergy matrix relies on botanical taxonomy, Permapeople crowd-sourced tables, and literature from Plants For A Future. Given that some historical companion planting claims border on folk horticulture, how did you quantitatively distinguish between chemically validated allelopathy (e.g., Marigold alpha-terthienyl) and anecdotal folklore?"),
-        ("Question 6 (Generative AI Hallucination and Agronomic Safety): ",
-         "You utilize Gemini 3.8 Flash to synthesize daily morning checklists for non-technical volunteers. If the LLM were to hallucinate an irrigation volume an order of magnitude too high (e.g., 1,313 Liters instead of 131.3 Liters) or recommend harvesting a toxic plant part, what deterministic software guardrails prevent catastrophic physical actuation?"),
-        ("Question 7 (Drip Irrigation Hydraulic Head Loss): ",
-         "The model calculates drip runtime based on nominal emitter discharge (0.80 GPH). In a 240 cm x 120 cm bed with micro-tubing, pressure head loss along the lateral lines and emitter clogging from mineral scale (hard Utah well water) can reduce actual flow by 20% to 35%. How does the cyber-physical loop detect and adapt to physical hardware degradation?"),
-        ("Question 8 (Regulatory Compliance and Municipal Water Priority): ",
-         "If the FAO-56 model calculates that a raised bed requires an urgent 131.3 Liter irrigation pulse on a Tuesday to avoid crossing the Readily Available Water stress threshold, but Salt Lake City municipal drought ordinances strictly prohibit watering on even-calendar days, how does the system arbitrate between biological crop survival and civil law?"),
-        ("Question 9 (Decadal Climate Non-Stationarity): ",
-         "Your spring frost logistic regression is parameterized on an 11-year baseline (2016–2026). Given accelerated climate change in the Intermountain West—characterized by earlier false springs followed by extreme polar vortex incursions—how does the model guard against non-stationary shifts in the probability distribution of late radiative freezes?"),
-        ("Question 10 (Digital Divide and Volunteer Adoption): ",
-         "Community gardens rely heavily on elderly retirees, ESL immigrants, and casual neighborhood volunteers who may not own smartphones or understand telemetry dashboards. How does your cyber-physical implementation ensure equitable access and prevent technologically alienated volunteers from abandoning the garden plots?")
-    ]
+    import json
+    with open('questions_data.json') as qf:
+        qa_list = json.load(qf)
 
-    for q_title, q_body in questions:
+    for item in qa_list:
         p_q = doc.add_paragraph()
         p_q.paragraph_format.left_indent = Inches(0.4)
         p_q.paragraph_format.first_line_indent = Inches(-0.4)
-        p_q.paragraph_format.space_before = Pt(4)
-        p_q.paragraph_format.space_after = Pt(4)
+        p_q.paragraph_format.space_before = Pt(10)
+        p_q.paragraph_format.space_after = Pt(3)
         p_q.paragraph_format.line_spacing = 1.15
         
-        r_qtitle = p_q.add_run(q_title)
+        r_qtitle = p_q.add_run(item['title'])
         r_qtitle.bold = True
         r_qtitle.font.name = "Times New Roman"
         r_qtitle.font.size = Pt(10)
         
-        r_qbody = p_q.add_run(q_body)
+        r_qbody = p_q.add_run(item['question'])
         r_qbody.font.name = "Times New Roman"
         r_qbody.font.size = Pt(10)
+
+        for a_idx, a_text in enumerate(item['answers']):
+            p_a = doc.add_paragraph()
+            p_a.paragraph_format.left_indent = Inches(0.4)
+            p_a.paragraph_format.first_line_indent = Inches(0.3)
+            p_a.paragraph_format.space_before = Pt(2)
+            p_a.paragraph_format.space_after = Pt(4)
+            p_a.paragraph_format.line_spacing = 1.25
+            
+            if a_idx == 0:
+                r_lead = p_a.add_run("Defense & Analytical Response: ")
+                r_lead.bold = True
+                r_lead.italic = True
+                r_lead.font.name = "Times New Roman"
+                r_lead.font.size = Pt(9.5)
+            
+            r_atxt = p_a.add_run(a_text)
+            r_atxt.font.name = "Times New Roman"
+            r_atxt.font.size = Pt(9.5)
 
     doc.save(docx_path)
     print(f"White Paper Word Document successfully generated and saved to: {docx_path}")
