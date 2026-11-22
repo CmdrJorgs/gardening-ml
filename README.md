@@ -24,7 +24,7 @@ The platform bridges real-time microclimate observations, botanical trait ontolo
    - **Spatial Bed Optimization**: Integer Linear Programming (ILP) with PuLP for companion polyculture layouts.
    - **Microclimate Phenology & Frost Modeling**: 30-year logistic regression freeze curves combined with multi-depth soil thermal gates.
    - **Harvest Maturity Predictor**: Gradient Boosted Decision Tree (XGBoost) modeling non-linear thermal-time (GDD) maturity dynamics.
-   - **Dynamic Water-Balance Engine**: FAO-56 dual crop coefficient hydrological model simulating root-zone depletion with physical continuity guarantees.
+   - **Dynamic Water-Balance Engine**: FAO-56 dual crop coefficient hydrological model simulating root-zone depletion with exact numerical mass conservation in simulation.
 4. **Synthesized Morning Action Brief**: Orchestration via **Google Gemini 4 Hydrogen** (`models/gemini-4-hydrogen`), calibrated to an accessible **~8th-grade community gardener reading level** to generate prioritized, actionable daily task checklists.
 
 ---
@@ -33,7 +33,7 @@ The platform bridges real-time microclimate observations, botanical trait ontolo
 
 ### 1. Spatial Garden Bed Optimization (Where to Plant)
 * **Formulation**: Formulated as an Integer Linear Program (ILP) using binary decision variables $x_{s, c} \in \{0, 1\}$ representing the placement of species $s$ at discrete grid cell coordinate $c = (i, j)$ across a 120 cm × 240 cm raised bed (10 cm discretization).
-* **Objective Function**: Maximizes positive biological companion affinities (e.g., nitrogen fixation from legumes, mycorrhizal fungi sharing, aromatic pest masking) while enforcing a strict **solar hierarchy**—taller indeterminate crops (tomatoes, pole beans) are placed along the northern boundary to eliminate shade casting over compact sun-loving greens.
+* **Objective Function**: Maximizes positive biological companion affinities (e.g., nitrogen fixation from legumes, mycorrhizal fungi sharing, aromatic pest masking) while enforcing a strict **solar hierarchy**—taller indeterminate crops (tomatoes, pole beans) are placed along the northern boundary to minimize southern shade occlusion over compact sun-loving greens.
 * **Physical Constraints**:
   - Non-overlapping circular mature canopies: $\sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2} \ge \frac{r_1 + r_2}{2}$.
   - Antagonist exclusion: Pairwise mutual repulsion within overlapping root zones (e.g., fennel near all crops; alliums near peas and beans).
@@ -208,7 +208,7 @@ This codebase is accompanied by an extensive peer-review formatted computational
 | **Companion Synergies** | 13 positive pairs, 0 antagonist pairs | Enhances natural biological pest defense & nutrition |
 | **Frost Logistic $P_{10}$ Date** | Day of Year 131 (May 11) | Calibrated with 30-year NOAA/PRISM Wasatch normals |
 | **Harvest Prediction Error** | **$\text{MAE} = 0.67\text{ days}$** | **97.7% reduction** in error vs static seed packet DTM |
-| **Hydrological Continuity** | $D_{r,t} \ge 0$, no stress days ($D_r \le \text{RAW}$) | Eliminates crop drought stress while preventing water waste |
+| **Hydrological Continuity** | $D_{r,t} \ge 0$, no stress days ($D_r \le \text{RAW}$) | Mitigates crop drought stress while minimizing simulated water waste |
 | **LLM Output Readability** | Flesch-Kincaid Grade Level: 8.2 | Directly accessible to all community garden volunteers |
 
 ---
