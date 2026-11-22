@@ -129,8 +129,7 @@ gardening-ml/
 │   ├── figure_2_frost_risk_soil_temp.png
 │   ├── figure_3_harvest_maturity_diagnostics.png
 │   ├── figure_4_soil_water_balance_hydrograph.png
-│   ├── figure_5_pipeline_architecture.png
-│   └── garden_bed_spatial_layout.png
+│   └── figure_5_pipeline_architecture.png
 │
 ├── whitepaper/
 │   ├── Precision_Agronomy_Cyber_Physical_Polyculture_White_Paper.pdf

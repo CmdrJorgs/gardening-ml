@@ -49,6 +49,8 @@ secrets.json
 *.swp
 *.swo
 *~
+.~lock.*#
+.~lock.*
 
 # Operating System files
 .DS_Store
@@ -57,3 +59,4 @@ Thumbs.db
 # Temporary and local scratch files
 scratch/tmp/
 *.tmp
+garden_bed_spatial_layout.png
